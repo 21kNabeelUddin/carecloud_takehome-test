@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from typing import Optional
 from dotenv import load_dotenv
 import os
@@ -90,6 +90,12 @@ def delete_patient(patient_id: str):
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard():
+    with open("templates/dashboard.html", "r") as f:
+        return HTMLResponse(content=f.read())
 
 
 if __name__ == "__main__":

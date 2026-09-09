@@ -83,6 +83,7 @@ Use the ngrok URL as your `SERVER_URL` in `.env`.
 | PUT | `/patients/{id}` | Update patient |
 | DELETE | `/patients/{id}` | Soft-delete patient |
 | GET | `/health` | Health check |
+| GET | `/dashboard` | Web dashboard for patient records |
 
 ## Data Model
 
@@ -137,12 +138,35 @@ curl http://localhost:8000/patients/{patient_id}
 3. **Vapi requires公网 access** - Use ngrok for local development
 4. **No HIPAA compliance** - This is a technical assessment, not production healthcare
 
+## Running Tests
+
+```bash
+# Install test dependencies
+pip install pytest httpx
+
+# Run all tests
+python -m pytest test_api.py -v
+```
+
+Tests cover:
+- Health check endpoint
+- Patient CRUD operations
+- Duplicate patient detection
+- Vapi webhook handler
+- Patient filtering
+
+## Deployed URLs
+
+- **API**: https://carecloud-patient-api-4dej.onrender.com
+- **Dashboard**: https://carecloud-patient-api-4dej.onrender.com/dashboard
+- **Phone**: +1 (681) 622 3116
+
 ## Next Steps (If More Time)
 
-1. Add API authentication (JWT tokens)
-2. Implement PostgreSQL for production
-3. Add appointment scheduling
-4. Multi-language support
-5. Call transcript storage
-6. Web dashboard for patient records
-7. Automated tests
+1. ~~Add automated tests~~ ✅
+2. ~~Web dashboard for patient records~~ ✅
+3. Add API authentication (JWT tokens)
+4. Implement PostgreSQL for production
+5. Add appointment scheduling
+6. Multi-language support
+7. Call transcript storage
