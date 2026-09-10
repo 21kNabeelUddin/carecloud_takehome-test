@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from typing import Optional
 from dotenv import load_dotenv
 import os
+import logging
 
 from models import PatientCreate, PatientUpdate
 from database import (
@@ -14,7 +15,16 @@ from vapi_webhook import router as vapi_router
 
 load_dotenv()
 
-app = FastAPI(title="Patient Registration API")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(title="Patient Registration API", lifespan=lifespan)
 app.include_router(vapi_router)
 
 app.add_middleware(
@@ -26,9 +36,13 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-def startup():
-    init_db()
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.exception(f"Unhandled error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"data": None, "error": "Internal server error"}
+    )
 
 
 def success_response(data, status_code=200):
@@ -94,8 +108,11 @@ def health_check():
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard():
-    with open("templates/dashboard.html", "r") as f:
-        return HTMLResponse(content=f.read())
+    try:
+        with open("templates/dashboard.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return error_response("Dashboard not available", 404)
 
 
 if __name__ == "__main__":

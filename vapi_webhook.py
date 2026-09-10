@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 
 from database import create_patient, get_patient_by_phone
@@ -10,7 +10,7 @@ router = APIRouter()
 
 def log_message(msg_type, data):
     """Log incoming Vapi messages."""
-    timestamp = datetime.utcnow().isoformat()
+    timestamp = datetime.now(timezone.utc).isoformat()
     print(f"[{timestamp}] VAPI {msg_type}: {json.dumps(data, indent=2, default=str)}")
 
 

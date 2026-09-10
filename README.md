@@ -2,6 +2,19 @@
 
 A voice-based AI agent that collects patient demographic information through natural conversation, persists data to SQLite, and exposes it through a REST API.
 
+
+## Deployed URLs
+
+- **API**: https://carecloud-patient-api-4dej.onrender.com
+- **Dashboard**: https://carecloud-patient-api-4dej.onrender.com/dashboard
+- **Phone**: +1 (681) 622 3116
+
+
+
+## Known Issue: Voice Call Stability
+
+The Vapi voice agent experiences dropped calls after 15-20 seconds. This is caused by instability in Vapi's WebRTC transport (Daily.co) used by the Dashboard Test Call feature, not by the application code. The issue persists even with a US VPN, pointing to a transport-layer problem on Vapi's side. The assistant config, system prompt, webhook handling, and data persistence are all working correctly — partial call logs show the bot greeting the caller, collecting a first name, and responding before the connection drops.
+
 ## Architecture
 
 ```
@@ -155,11 +168,7 @@ Tests cover:
 - Vapi webhook handler
 - Patient filtering
 
-## Deployed URLs
 
-- **API**: https://carecloud-patient-api-4dej.onrender.com
-- **Dashboard**: https://carecloud-patient-api-4dej.onrender.com/dashboard
-- **Phone**: +1 (681) 622 3116
 
 ## Next Steps (If More Time)
 
